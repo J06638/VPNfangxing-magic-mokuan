@@ -14,42 +14,13 @@
 - 排除 `tunl0`、`ip6tnl0`、`gre0`、`gretap0`、`erspan0`、`sit0` 等内核占位隧道，避免误判为真实 VPN。
 - 卸载时恢复模块修改过的 sysctl、MTU 与 Wi-Fi power-save 状态。
 
-## 自动模式
+## 下载
 
-### BOOST
-
-实时总流量达到约 **512 KiB/s（约 4.2 Mbps）** 自动进入。高流量期间保持快速采样，并在设备支持时临时关闭 Wi-Fi Power Save。
-
-### BALANCED
-
-亮屏但没有持续大流量时使用。恢复系统/安装前 Wi-Fi 省电状态，同时保持较快的 VPN 接口变化检测。
-
-### ECO
-
-熄屏且低流量时自动进入。恢复 Wi-Fi 原始省电状态，显著降低守护与防火墙校验频率，减少待机耗电。
-
-## v4.2 关键参数
-
-```ini
-BOOST_ENTER_BPS=524288
-BOOST_EXIT_BPS=131072
-BOOST_HOLD_SECONDS=20
-BOOST_SCAN_INTERVAL=3
-SCREEN_ON_IDLE_INTERVAL=3
-SCREEN_ON_VPN_INTERVAL=5
-SCREEN_OFF_IDLE_INTERVAL=60
-SCREEN_OFF_VPN_INTERVAL=30
-FIREWALL_VERIFY_BOOST=30
-FIREWALL_VERIFY_NORMAL=180
-FIREWALL_VERIFY_SCREEN_OFF=300
-DISABLE_WIFI_POWERSAVE=0
-```
-
-完整配置见 `module/config.conf`。
+最新版刷入包：`墙梯节点WiFi数据放行优化模块-All-v4.2省电自适应版.zip`
 
 ## 安装
 
-1. 下载仓库 `dist/` 目录中的最新 ZIP。
+1. 下载最新版 ZIP。
 2. 在 Magisk / KernelSU / APatch 模块管理器中刷入。
 3. 重启手机。
 4. 如从旧版升级，可直接覆盖安装。
@@ -74,16 +45,6 @@ cat /data/local/tmp/netfix_allinone_v4/netfix.log | tail -n 50
 - APatch
 
 已在一加设备环境中测试；不同厂商 ROM、内核、防火墙实现可能存在差异。
-
-## 注意
-
-- 本模块会修改网络 sysctl、iptables/ip6tables、VPN 接口 MTU 等低层参数，请先确认具备恢复 Root 环境的能力。
-- 不建议将 `DISABLE_WIFI_POWERSAVE` 手动改为 `1` 长期使用，否则可能增加待机耗电。
-- 网络速度受运营商、Wi-Fi AP、VPN 节点、系统内核和链路质量共同影响，本模块不能突破物理带宽或服务端限速。
-
-## 源码
-
-完整模块源码位于 `module/` 目录，可直接审计 `service.sh`、`action.sh`、`uninstall.sh` 与 `config.conf`。
 
 ## License
 
